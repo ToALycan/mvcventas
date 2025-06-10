@@ -2,7 +2,7 @@
 # request: para obtener la URL actual del navegador.
 # controllers: se importan los controladores de cada módulo.
 # db: objeto SQLAlchemy para manejar la base de datos.
-from flask import Flask,request, redirect, url_for  
+from flask import Flask,request, render_template
 from controllers import usuario_controller, cliente_controller, producto_controller, venta_controller
 from database import db
 # Se crea la aplicación Flask, Esto inicia la app web.
@@ -35,7 +35,7 @@ def injec_active_path():
 # Cuando entras a http://localhost:5000/, verás el texto "Aplicacion ventas". Es solo una prueba sencilla.
 @app.route("/")
 def home():
-    return redirect(url_for('usuario.index'))
+    return render_template('usuario/index.html')
 # Ejecutar la aplicación:
 # with app.app_context(): db.create_all(): crea las tablas en la base de datos si no existen.
 # app.run(debug=True): lanza la app en modo debug, útil para desarrollo (recarga automática y muestra errores).
