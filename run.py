@@ -5,15 +5,23 @@
 from flask import Flask,request, render_template
 from controllers import usuario_controller, cliente_controller, producto_controller, venta_controller
 from database import db
+import os
+from flask_sqlalchemy import SQLAlchemy
 # Se crea la aplicación Flask, Esto inicia la app web.
 app = Flask(__name__)
-# Configuración de base de datos:
-# Usa SQLite como motor de base de datos (ventas.db).
-# Desactiva el rastreo de cambios en SQLAlchemy para mejorar el rendimiento.
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ventas.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-# Se vincula la base de datos con la app Flask:
-# Esto le dice a SQLAlchemy que use esta instancia de Flask para conectarse y trabajar.
+
+# Configuración de la base de datos (LOCAL y RENDER)
+uri = os.getenv('DATABASE_URL', 'sqlite:///ventas.db')  # Usa SQLite localmente si no hay DATABASE_URL
+
+# Corrección necesaria para PostgreSQL en Render
+if uri and uri.startswith('postgres://'):
+    uri = uri.replace('postgres://', 'postgresql://', 1)
+
+# Configuración CRUCIAL que faltaba
+app.config['SQLALCHEMY_DATABASE_URI'] = uri
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Ahora sí inicializa la db con la app configurada
 db.init_app(app)
 # Registra los blueprints:
 # Un blueprint es una forma de modularizar rutas. Aquí se añaden los controladores separados para:
