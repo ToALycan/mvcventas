@@ -12,6 +12,12 @@ app = Flask(__name__)
 # Desactiva el rastreo de cambios en SQLAlchemy para mejorar el rendimiento.
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///ventas.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+
+import os
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.getcwd(),'instance','ventas.db')
+
+
 # Se vincula la base de datos con la app Flask:
 # Esto le dice a SQLAlchemy que use esta instancia de Flask para conectarse y trabajar.
 db.init_app(app)
